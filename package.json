@@ -4,5 +4,27 @@
   "private": true,
   "engines": {
     "node": ">=18"
+  },
+  "description": "Gerador de card SVG estilo terminal com seus dados reais do GitHub, hospedado no Vercel.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuilhermeNantes/github-stats-vercel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/GuilhermeNantes/github-stats-vercel/issues"
+  },
+  "homepage": "https://github.com/GuilhermeNantes/github-stats-vercel#readme",
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@vercel/node": "^5.9.9",
+    "typescript": "^7.0.2"
   }
 }
