@@ -35,8 +35,6 @@ export function animatedNumber(
   } = options;
 
   const finalStr = String(finalValue);
-  const widthPerChar = fontSize * 0.6;
-  const fullWidth = finalStr.length * widthPerChar;
 
   if (!enabled) {
     return `
@@ -54,39 +52,55 @@ export function animatedNumber(
     `;
   }
 
-  const clipId = `numclip-${Math.random().toString(36).slice(2, 9)}`;
+  const widthPerChar = fontSize * 0.6;
+  const fullWidth = finalStr.length * widthPerChar;
 
   return `
-    <defs>
-      <clipPath id="${clipId}">
-        <rect
-          x="${x}"
-          y="${y - fontSize}"
-          width="${fullWidth}"
-          height="${fontSize + 4}"
-        >
-          <animate
-            attributeName="width"
-            from="0"
-            to="${fullWidth}"
-            begin="${beginSec}s"
-            dur="0.3s"
-            fill="freeze"
-          />
-        </rect>
-      </clipPath>
-    </defs>
-    <text
-      x="${x}"
-      y="${y}"
-      fill="${color}"
-      font-family="${fontFamily}"
-      font-size="${fontSize}"
-      font-weight="${fontWeight}"
-      text-anchor="${textAnchor}"
-      clip-path="url(#${clipId})"
-    >
-      ${escapeXml(finalStr)}
-    </text>
+    <g opacity="0">
+      <animate
+        attributeName="opacity"
+        from="0"
+        to="1"
+        begin="${beginSec}s"
+        dur="0.01s"
+        fill="freeze"
+      />
+      <text
+        x="${x}"
+        y="${y}"
+        fill="${color}"
+        font-family="${fontFamily}"
+        font-size="${fontSize}"
+        font-weight="${fontWeight}"
+        text-anchor="${textAnchor}"
+      >
+        ${escapeXml(finalStr)}
+      </text>
+      <rect
+        x="${x}"
+        y="${y - fontSize}"
+        width="${fullWidth}"
+        height="${fontSize + 4}"
+        fill="${color}"
+        opacity="0.0"
+      >
+        <animate
+          attributeName="width"
+          from="0"
+          to="${fullWidth}"
+          begin="${beginSec}s"
+          dur="0.4s"
+          fill="freeze"
+        />
+        <animate
+          attributeName="opacity"
+          from="0.0"
+          to="0.15"
+          begin="${beginSec}s"
+          dur="0.4s"
+          fill="freeze"
+        />
+      </rect>
+    </g>
   `;
 }

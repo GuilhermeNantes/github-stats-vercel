@@ -10,5 +10,6 @@ export function whoami(context: CommandContext): CommandResult {
     title: "$ whoami",
     lines: [`${login} — ${role.toLowerCase()}`],
     highlights: [0],
+    link: `https://github.com/${login}`,
   };
 }

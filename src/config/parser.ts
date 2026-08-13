@@ -23,10 +23,11 @@ function getString(value: string | string[] | undefined, fallback: string): stri
   return value ?? fallback;
 }
 
-function getNumber(value: string | string[] | undefined, fallback: number): number {
-  const stringValue = getString(value, String(fallback));
+function getNumber(value: string | string[] | undefined): number | undefined {
+  const stringValue = getString(value, "");
+  if (!stringValue) return undefined;
   const number = Number(stringValue);
-  if (!Number.isFinite(number)) return fallback;
+  if (!Number.isFinite(number)) return undefined;
   return number;
 }
 
@@ -97,8 +98,8 @@ export function parseRequest(req: VercelRequest): ParseResult {
     commands,
     theme: pickTheme(req.query.theme),
     hidden: parseList(req.query.hide),
-    width: getNumber(req.query.width, defaultConfig.width),
-    height: getNumber(req.query.height, defaultConfig.height),
+    width: getNumber(req.query.width) ?? defaultConfig.width,
+    height: getNumber(req.query.height),
     noanimation: effectiveNoanimation,
     speed,
   };

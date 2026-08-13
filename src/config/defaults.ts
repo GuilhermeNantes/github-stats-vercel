@@ -8,7 +8,7 @@ export const defaultConfig: TerminalConfig = {
   theme: "dark",
   hidden: [],
   width: 680,
-  height: 1300,
+  height: undefined,
   noanimation: false,
   speed: "normal",
 };

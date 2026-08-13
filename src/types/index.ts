@@ -56,7 +56,7 @@ export interface TerminalConfig {
   hidden: string[];
 
   width: number;
-  height: number;
+  height?: number;
 
   noanimation: boolean;
 
@@ -77,6 +77,8 @@ export interface CommandResult {
   lines: string[];
 
   highlights?: number[];
+
+  link?: string;
 
   bars?: { label: string; value: number; max: number; color: string }[];
 
@@ -117,5 +119,5 @@ export interface CommandResult {
 
   langBlocks?: { label: string; value: number; color: string }[];
 
-  projects?: { name: string; language: string | null }[];
+  projects?: { name: string; language: string | null; html_url?: string }[];
 }

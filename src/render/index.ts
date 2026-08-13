@@ -26,22 +26,29 @@ interface TypingState {
   currentStep: number;
 }
 
+const PADDING_TOP = 75;
+const PADDING_BOTTOM = 50;
+const BLOCK_GAP = 24;
+const TITLE_GAP = 30;
+const LINE_HEIGHT = 21;
+const ROW_HEIGHT = 22;
+
 export function renderSvg(results: CommandResult[], config: TerminalConfig): string {
   const theme = getTheme(config.theme);
 
   const width = config.width;
-  const height = config.height;
+  const requestedHeight = config.height;
 
   const state: TypingState = { currentStep: 0 };
   const stepMs = config.noanimation ? 0 : SPEED_TO_STEP_MS[config.speed];
   const animEnabled = stepMs > 0;
 
-  let y = 75;
+  let y = PADDING_TOP;
   let content = "";
 
   for (const result of results) {
     content += emitText(result.title, 28, y, theme.muted, 13, state, stepMs, false, "600");
-    y += 30;
+    y += TITLE_GAP;
 
     const animState = { enabled: animEnabled, stepMs, startStep: state.currentStep };
 
@@ -225,7 +232,7 @@ export function renderSvg(results: CommandResult[], config: TerminalConfig): str
           );
         }
 
-        y += 22;
+        y += ROW_HEIGHT;
       }
     } else if (result.projects && result.projects.length > 0) {
       const rendered = renderProjectPills(
@@ -241,8 +248,12 @@ export function renderSvg(results: CommandResult[], config: TerminalConfig): str
       result.lines.forEach((line, index) => {
         const color = highlights.has(index) ? theme.accent : theme.foreground;
         const weight = highlights.has(index) ? "600" : undefined;
-        content += emitText(line, 28, y, color, 13, state, stepMs, false, weight);
-        y += 21;
+        if (result.link && index === 0) {
+          content += emitLink(line, 28, y, color, 13, weight, result.link, state, stepMs);
+        } else {
+          content += emitText(line, 28, y, color, 13, state, stepMs, false, weight);
+        }
+        y += LINE_HEIGHT;
       });
     }
 
@@ -263,20 +274,23 @@ export function renderSvg(results: CommandResult[], config: TerminalConfig): str
       }
     }
 
-    y += 24;
+    y += BLOCK_GAP;
   }
 
-  content += renderCursor(28, y, theme.accent);
+  content += renderCursor(28, y + 8, theme.accent);
+  y += PADDING_BOTTOM;
+
+  const finalHeight = requestedHeight !== undefined ? Math.max(y, requestedHeight) : y;
 
   return `
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="${width}"
-      height="${height}"
-      viewBox="0 0 ${width} ${height}"
+      height="${finalHeight}"
+      viewBox="0 0 ${width} ${finalHeight}"
     >
 
-      ${renderTerminal(width, height, theme)}
+      ${renderTerminal(width, finalHeight, theme)}
 
       ${content}
 
@@ -306,4 +320,74 @@ function emitText(
   });
   state.currentStep += text.length;
   return out;
+}
+
+function emitLink(
+  text: string,
+  x: number,
+  y: number,
+  color: string,
+  fontSize: number,
+  fontWeight: string | undefined,
+  href: string,
+  state: TypingState,
+  stepMs: number,
+): string {
+  const weight = fontWeight ? `font-weight="${fontWeight}"` : "";
+  const fontFamily = "Courier New, monospace";
+
+  if (stepMs === 0) {
+    return `
+      <a href="${href}" target="_blank" rel="noopener noreferrer">
+        <text
+          x="${x}"
+          y="${y}"
+          fill="${color}"
+          font-family="${fontFamily}"
+          font-size="${fontSize}"
+          text-decoration="underline"
+          ${weight}
+        >
+          ${text}
+        </text>
+      </a>
+    `;
+  }
+
+  const startStep = state.currentStep;
+  const widthPerChar = fontSize * 0.6;
+  const fullWidth = text.length * widthPerChar;
+  const beginSec = (startStep * stepMs) / 1000;
+  const durSec = (text.length * stepMs) / 1000;
+
+  return `
+    <defs>
+      <clipPath id="linkclip-${startStep}">
+        <rect x="${x}" y="${y - fontSize}" width="0" height="${fontSize + 4}">
+          <animate
+            attributeName="width"
+            from="0"
+            to="${fullWidth}"
+            begin="${beginSec}s"
+            dur="${durSec}s"
+            fill="freeze"
+          />
+        </rect>
+      </clipPath>
+    </defs>
+    <a href="${href}" target="_blank" rel="noopener noreferrer">
+      <text
+        x="${x}"
+        y="${y}"
+        fill="${color}"
+        font-family="${fontFamily}"
+        font-size="${fontSize}"
+        text-decoration="underline"
+        clip-path="url(#linkclip-${startStep})"
+        ${weight}
+      >
+        ${text}
+      </text>
+    </a>
+  `;
 }

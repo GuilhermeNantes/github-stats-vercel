@@ -12,6 +12,7 @@ function escapeXml(value: string): string {
 export interface ProjectPill {
   name: string;
   language: string | null;
+  html_url?: string;
 }
 
 const START_X = 28;
@@ -77,7 +78,7 @@ export function renderProjectPills(
       ? `<animate attributeName="opacity" from="0" to="1" begin="${animDelay / 1000}s" dur="0.3s" fill="freeze" />`
       : "";
 
-    svg += `
+    const inner = `
       <g opacity="${anim.enabled ? "0" : "1"}">
         ${fadeAnim}
 
@@ -105,6 +106,16 @@ export function renderProjectPills(
         </text>
       </g>
     `;
+
+    if (proj.html_url) {
+      svg += `
+        <a href="${escapeXml(proj.html_url)}" target="_blank" rel="noopener noreferrer">
+          ${inner}
+        </a>
+      `;
+    } else {
+      svg += inner;
+    }
 
     x += pillWidth + PILL_GAP;
     maxRowBottom = y + PILL_HEIGHT;

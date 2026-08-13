@@ -4,7 +4,11 @@ Gerador de card SVG estilo terminal macOS com dados reais do GitHub, hospedado
 no Vercel. Suporta temas, animação de typing nos textos, animação matrix nos
 números e várias formas de visualização.
 
-![preview](https://github-stats-vercel.vercel.app/api/terminal?username=GuilhermeNantes&cmd=whoami,manifest,stats,languages,projects,contact&noanimation=true)
+<p align="center">
+  <a href="https://github-stats-vercel.vercel.app/api/terminal?username=GuilhermeNantes&cmd=whoami,manifest,gitlog,stats,languages,projects,contact&noanimation=true&theme=github">
+    <img src="https://github-stats-vercel.vercel.app/api/terminal?username=GuilhermeNantes&cmd=whoami,manifest,gitlog,stats,languages,projects,contact&noanimation=true&theme=github" alt="github stats terminal" />
+  </a>
+</p>
 
 ## Setup
 
@@ -54,22 +58,25 @@ Acesse `http://localhost:3000/api/terminal?username=SEU_USER`
 | `noanimation` | `false` | Desliga todas animações |
 | `hide` | (vazio) | Comandos a esconder |
 | `width` | `680` | Largura do SVG |
-| `height` | `1300` | Altura do SVG |
+| `height` | dinâmico | Altura do SVG (auto-ajusta ao conteúdo) |
+| `name` | `Guilherme Nantes` | Nome completo (whoami) |
+| `role` | `Software Developer` | Cargo / título |
+| `motto` | `simple over clever.` | Frase de destaque no manifesto |
 | `mock` | `false` | Usa dados mockados (sem chamar API) |
 | `help` | `false` | Mostra tela de ajuda |
 
 ### Comandos disponíveis
 
-| Comando | O que mostra |
-|---|---|
-| `whoami` | Login + role |
-| `manifest` | Manifesto fixo |
-| `gitlog` | Últimos commits públicos |
-| `stats` | Repos/stars/forks/followers/following com matrix animation |
-| `languages` | Top linguagens com barras `█░` |
-| `projects` | Top 3 repos em pills |
-| `contributions` | Heatmap 12 semanas |
-| `contact` | github + linkedin |
+| Comando | O que mostra | Link |
+|---|---|---|
+| `whoami` | Login + role em destaque | github.com/[user] |
+| `manifest` | Manifesto + motto + style + stack + rule | — |
+| `gitlog` | Últimos 5 commits públicos (sha + msg + data) | — |
+| `stats` | Repos/stars/forks/followers/following + top repo + idade | — |
+| `languages` | Top linguagens com barras `█░` | — |
+| `projects` | Top 4 repos em pills clicáveis | github.com/[user]/[repo] |
+| `contributions` | Heatmap 12 semanas + totais | — |
+| `contact` | github + linkedin | github.com/[user] |
 
 ## Temas
 
@@ -83,8 +90,12 @@ Acesse `http://localhost:3000/api/terminal?username=SEU_USER`
 
 ## Exemplo para README de perfil
 
-```markdown
-<img src="https://github-stats-vercel.vercel.app/api/terminal?username=GuilhermeNantes&cmd=whoami,manifest,stats,languages,projects,contact&noanimation=true" width="100%" alt="GitHub Stats" />
+```html
+<p align="center">
+  <a href="https://github.com/GuilhermeNantes">
+    <img src="https://github-stats-vercel.vercel.app/api/terminal?username=GuilhermeNantes&cmd=whoami,manifest,gitlog,stats,languages,projects,contact&noanimation=true&theme=github" width="680" alt="GitHub Stats" />
+  </a>
+</p>
 ```
 
 ### Variações
